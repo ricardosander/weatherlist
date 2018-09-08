@@ -1,4 +1,4 @@
-package br.com.ricardosander.weatherlist;
+package br.com.ricardosander.weatherlist.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,8 +17,8 @@ public class RecommendationController {
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/coordinates")
-  public ResponseEntity<String> getPlaylistByGeographicCoordinates(@RequestParam String latitude,
-      @RequestParam String longitude) {
+  public ResponseEntity<String> getPlaylistByGeographicCoordinates(@RequestParam double latitude,
+      @RequestParam double longitude) {
     return ResponseEntity.ok().body("latitude : " +latitude + ", longitude: " + longitude);
   }
 
