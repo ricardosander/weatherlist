@@ -1,5 +1,9 @@
 package br.com.ricardosander.weatherlist.dto;
 
+import static br.com.ricardosander.weatherlist.dto.GeographicCoordinateValidator.MAXIMUM_LATITUDE;
+import static br.com.ricardosander.weatherlist.dto.GeographicCoordinateValidator.MAXIMUM_LONGITUDE;
+import static br.com.ricardosander.weatherlist.dto.GeographicCoordinateValidator.MINIMUM_LATITUDE;
+import static br.com.ricardosander.weatherlist.dto.GeographicCoordinateValidator.MINIMUM_LONGITUDE;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -42,8 +46,8 @@ public class GeographicCoordinateValidatorTest {
   @Test
   public void testWithPositiveLimitValidLatitudeAndLongitude() {
 
-    double latitude = 90.0;
-    double longitude = 180.0;
+    double latitude = MAXIMUM_LATITUDE;
+    double longitude = MAXIMUM_LONGITUDE;
 
     GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
 
@@ -54,8 +58,8 @@ public class GeographicCoordinateValidatorTest {
   @Test
   public void testWithNegativeLimitValidLatitudeAndLongitude() {
 
-    double latitude = -90.0;
-    double longitude = -180.0;
+    double latitude = MINIMUM_LATITUDE;
+    double longitude = MINIMUM_LONGITUDE;
 
     GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
 
@@ -66,8 +70,8 @@ public class GeographicCoordinateValidatorTest {
   @Test
   public void testWithLimitValuesNegativeLatitude() {
 
-    double latitude = -90.0;
-    double longitude = 180.0;
+    double latitude = MINIMUM_LATITUDE;
+    double longitude = MAXIMUM_LONGITUDE;
 
     GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
 
@@ -78,8 +82,8 @@ public class GeographicCoordinateValidatorTest {
   @Test
   public void testWithLimitValuesNegativeLongitude() {
 
-    double latitude = 90.0;
-    double longitude = -180.0;
+    double latitude = MAXIMUM_LATITUDE;
+    double longitude = MINIMUM_LONGITUDE;
 
     GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
 
