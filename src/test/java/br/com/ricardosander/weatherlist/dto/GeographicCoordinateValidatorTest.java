@@ -1,0 +1,186 @@
+package br.com.ricardosander.weatherlist.dto;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class GeographicCoordinateValidatorTest {
+
+  private GeographicCoordinateValidator geographicCoordinateValidator;
+
+  @Before
+  public void setUp() {
+    geographicCoordinateValidator = new GeographicCoordinateValidator();
+  }
+
+  @Test
+  public void testWithZeros() {
+
+    double latitude = 0.0;
+    double longitude = 0.0;
+
+    GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
+
+    assertTrue(geographicCoordinateValidator.isLatitudeValid(geoCoordinate));
+    assertTrue(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
+  }
+
+  @Test
+  public void testWithValidLatitudeAndLongitude() {
+
+    double latitude = 45.0;
+    double longitude = 45.0;
+
+    GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
+
+    assertTrue(geographicCoordinateValidator.isLatitudeValid(geoCoordinate));
+    assertTrue(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
+  }
+
+  @Test
+  public void testWithPositiveLimitValidLatitudeAndLongitude() {
+
+    double latitude = 90.0;
+    double longitude = 180.0;
+
+    GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
+
+    assertTrue(geographicCoordinateValidator.isLatitudeValid(geoCoordinate));
+    assertTrue(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
+  }
+
+  @Test
+  public void testWithNegativeLimitValidLatitudeAndLongitude() {
+
+    double latitude = -90.0;
+    double longitude = -180.0;
+
+    GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
+
+    assertTrue(geographicCoordinateValidator.isLatitudeValid(geoCoordinate));
+    assertTrue(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
+  }
+
+  @Test
+  public void testWithLimitValuesNegativeLatitude() {
+
+    double latitude = -90.0;
+    double longitude = 180.0;
+
+    GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
+
+    assertTrue(geographicCoordinateValidator.isLatitudeValid(geoCoordinate));
+    assertTrue(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
+  }
+
+  @Test
+  public void testWithLimitValuesNegativeLongitude() {
+
+    double latitude = 90.0;
+    double longitude = -180.0;
+
+    GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
+
+    assertTrue(geographicCoordinateValidator.isLatitudeValid(geoCoordinate));
+    assertTrue(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
+  }
+
+  @Test
+  public void testWithInvalidPositiveLatitude() {
+
+    double latitude = 91.0;
+    double longitude = 45.0;
+
+    GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
+
+    assertFalse(geographicCoordinateValidator.isLatitudeValid(geoCoordinate));
+    assertTrue(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
+  }
+
+  @Test
+  public void testWithInvalidPositiveLongitude() {
+
+    double latitude = 45.0;
+    double longitude = 181.0;
+
+    GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
+
+    assertTrue(geographicCoordinateValidator.isLatitudeValid(geoCoordinate));
+    assertFalse(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
+  }
+
+  @Test
+  public void testWithInvalidPositiveLatitudeAlmostValid() {
+
+    double latitude = 90.0001;
+    double longitude = 45.0;
+
+    GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
+
+    assertFalse(geographicCoordinateValidator.isLatitudeValid(geoCoordinate));
+    assertTrue(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
+  }
+
+  @Test
+  public void testWithInvalidPositiveLongitudeAlmostValid() {
+
+    double latitude = 45.0;
+    double longitude = 180.0001;
+
+    GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
+
+    assertTrue(geographicCoordinateValidator.isLatitudeValid(geoCoordinate));
+    assertFalse(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
+  }
+
+  @Test
+  public void testWithInvalidNegativeLatitude() {
+
+    double latitude = -91.0;
+    double longitude = 45.0;
+
+    GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
+
+    assertFalse(geographicCoordinateValidator.isLatitudeValid(geoCoordinate));
+    assertTrue(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
+  }
+
+  @Test
+  public void testWithInvalidNegativeLongitude() {
+
+    double latitude = 45.0;
+    double longitude = -181.0;
+
+    GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
+
+    assertTrue(geographicCoordinateValidator.isLatitudeValid(geoCoordinate));
+    assertFalse(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
+  }
+
+  @Test
+  public void testWithInvalidNegativeLatitudeAlmostValid() {
+
+    double latitude = -90.0001;
+    double longitude = 45.0;
+
+    GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
+
+    assertFalse(geographicCoordinateValidator.isLatitudeValid(geoCoordinate));
+    assertTrue(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
+  }
+
+  @Test
+  public void testWithInvalidNegativeLongitudeAlmostValid() {
+
+    double latitude = 45;
+    double longitude = -180.0001;
+
+    GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
+
+    assertTrue(geographicCoordinateValidator.isLatitudeValid(geoCoordinate));
+    assertFalse(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
+  }
+
+}
