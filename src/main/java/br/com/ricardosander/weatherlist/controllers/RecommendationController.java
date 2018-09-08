@@ -1,5 +1,6 @@
 package br.com.ricardosander.weatherlist.controllers;
 
+import br.com.ricardosander.weatherlist.dto.GeographicCoordinate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,12 @@ public class RecommendationController {
   @RequestMapping(method = RequestMethod.GET, value = "/coordinates")
   public ResponseEntity<String> getPlaylistByGeographicCoordinates(@RequestParam double latitude,
       @RequestParam double longitude) {
-    return ResponseEntity.ok().body("latitude : " +latitude + ", longitude: " + longitude);
+
+    GeographicCoordinate geCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
+
+    return ResponseEntity.ok()
+        .body("latitude : " + geCoordinate.getLatitude() + ", longitude: "
+            + geCoordinate.getLongitude());
   }
 
 }
