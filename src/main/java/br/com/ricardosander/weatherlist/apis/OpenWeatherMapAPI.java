@@ -1,7 +1,5 @@
 package br.com.ricardosander.weatherlist.apis;
 
-import static org.mockito.Mockito.mock;
-
 import br.com.ricardosander.weatherlist.dto.GeographicCoordinate;
 import br.com.ricardosander.weatherlist.entities.Weather;
 import br.com.ricardosander.weatherlist.services.exceptions.ObjectNotFoundException;
@@ -36,7 +34,6 @@ public class OpenWeatherMapAPI implements WeatherAPI {
 
   @Override
   public Weather findWeatherByCityName(String cityName) {
-    WeatherAPI weatherAPI = mock(WeatherAPI.class);
 
     if (cityName.equals(VERY_HOT_CITY_NAME)) {
 
