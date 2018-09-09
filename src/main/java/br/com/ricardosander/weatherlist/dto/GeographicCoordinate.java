@@ -6,6 +6,7 @@ import static br.com.ricardosander.weatherlist.dto.GeographicCoordinateValidator
 import static br.com.ricardosander.weatherlist.dto.GeographicCoordinateValidator.MINIMUM_LONGITUDE;
 
 import java.security.InvalidParameterException;
+import java.util.Objects;
 
 public class GeographicCoordinate {
 
@@ -57,4 +58,22 @@ public class GeographicCoordinate {
     return longitude;
   }
 
+  @Override
+  public String toString() {
+    return "Geographic coordinates : " + "latitude = " + latitude + ", longitude = " + longitude;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) { return true; }
+    if (!(o instanceof GeographicCoordinate)) { return false; }
+    GeographicCoordinate that = (GeographicCoordinate) o;
+    return Double.compare(that.getLatitude(), getLatitude()) == 0 &&
+        Double.compare(that.getLongitude(), getLongitude()) == 0;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getLatitude(), getLongitude());
+  }
 }
