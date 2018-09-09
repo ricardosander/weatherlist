@@ -3,9 +3,8 @@ package br.com.ricardosander.weatherlist.dto;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import br.com.ricardosander.weatherlist.services.exceptions.InvalidParameterException;
 import org.junit.Test;
-
-import java.security.InvalidParameterException;
 
 public class GeographicCoordinateTest {
 
