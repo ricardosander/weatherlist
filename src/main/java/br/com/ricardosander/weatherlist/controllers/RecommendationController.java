@@ -25,7 +25,7 @@ public class RecommendationController {
 
   @RequestMapping(method = RequestMethod.GET, value = "/city/{cityName}")
   public ResponseEntity<Playlist> getPlaylistByCityName(@PathVariable String cityName) {
-    return ResponseEntity.ok().body(recommendationService.getPlaylist(cityName));
+    return ResponseEntity.ok().body(recommendationService.getPlaylistByCityName(cityName));
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/coordinates")

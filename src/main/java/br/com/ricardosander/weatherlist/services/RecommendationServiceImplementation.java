@@ -32,7 +32,7 @@ public class RecommendationServiceImplementation implements RecommendationServic
   }
 
   @Override
-  public Playlist getPlaylist(String cityName) {
+  public Playlist getPlaylistByCityName(String cityName) {
 
     Weather weather = weatherAPI.findWeatherByCityName(cityName);
     Category category = Category.getInstance(weather);

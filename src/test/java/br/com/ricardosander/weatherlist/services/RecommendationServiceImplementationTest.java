@@ -78,7 +78,7 @@ public class RecommendationServiceImplementationTest {
   @Test
   public void shouldReturnPartyPlaylistForVeryHotCityName() {
 
-    Playlist playlist = recommendationService.getPlaylist(VERY_HOT_CITY_NAME);
+    Playlist playlist = recommendationService.getPlaylistByCityName(VERY_HOT_CITY_NAME);
 
     assertNotNull(playlist);
     assertNotNull(playlist.getTracks());
@@ -90,7 +90,7 @@ public class RecommendationServiceImplementationTest {
   @Test
   public void shouldReturnPopPlaylistForHotCityName() {
 
-    Playlist playlist = recommendationService.getPlaylist(HOT_CITY_NAME);
+    Playlist playlist = recommendationService.getPlaylistByCityName(HOT_CITY_NAME);
 
     assertNotNull(playlist);
     assertNotNull(playlist.getTracks());
@@ -102,7 +102,7 @@ public class RecommendationServiceImplementationTest {
   @Test
   public void shouldReturnRockPlaylistForChillyCityName() {
 
-    Playlist playlist = recommendationService.getPlaylist(CHILLY_CITY_NAME);
+    Playlist playlist = recommendationService.getPlaylistByCityName(CHILLY_CITY_NAME);
 
     assertNotNull(playlist);
     assertNotNull(playlist.getTracks());
@@ -114,7 +114,7 @@ public class RecommendationServiceImplementationTest {
   @Test
   public void shouldReturnClassicPlaylistForFreezingCityName() {
 
-    Playlist playlist = recommendationService.getPlaylist(FREEZING_CITY_NAME);
+    Playlist playlist = recommendationService.getPlaylistByCityName(FREEZING_CITY_NAME);
 
     assertNotNull(playlist);
     assertNotNull(playlist.getTracks());
@@ -126,7 +126,7 @@ public class RecommendationServiceImplementationTest {
   @Test(expected = ObjectNotFoundException.class)
   public void shouldThrowExceptionForInvalidCityName() {
 
-    Playlist playlist = recommendationService.getPlaylist(NOT_REAL_CITY_NAME);
+    Playlist playlist = recommendationService.getPlaylistByCityName(NOT_REAL_CITY_NAME);
 
     assertNotNull(playlist);
   }

@@ -7,6 +7,6 @@ public interface RecommendationService {
 
   Playlist getPlaylist(GeographicCoordinate geographicCoordinate);
 
-  Playlist getPlaylist(String cityName);
+  Playlist getPlaylistByCityName(String cityName);
 
 }
