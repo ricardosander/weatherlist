@@ -7,10 +7,9 @@ import static br.com.ricardosander.weatherlist.dto.GeographicCoordinateValidator
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import br.com.ricardosander.weatherlist.services.exceptions.InvalidParameterException;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.security.InvalidParameterException;
 
 public class GeographicCoordinateValidatorTest {
 
