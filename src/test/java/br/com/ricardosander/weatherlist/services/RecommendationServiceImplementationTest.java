@@ -40,16 +40,12 @@ public class RecommendationServiceImplementationTest {
   private static final List<String> CLASSIC_SONG_NAMES =
       Arrays.asList("Classic 1", "The Classic of the Classics", "Spring Framework");
 
-  private WeatherAPI weatherAPI;
-
-  private PlaylistAPI playlistAPI;
-
   private RecommendationService recommendationService;
 
   @Before
   public void setUp() {
 
-    weatherAPI = mock(WeatherAPI.class);
+    WeatherAPI weatherAPI = mock(WeatherAPI.class);
 
     double veryHotTemperatureInCelcius = 31.0;
     Weather veryHotWeather = new Weather(veryHotTemperatureInCelcius);
@@ -70,7 +66,7 @@ public class RecommendationServiceImplementationTest {
     when(weatherAPI.findWeatherByCityName(NOT_REAL_CITY_NAME)).thenThrow(
         ObjectNotFoundException.class);
 
-    playlistAPI = mock(PlaylistAPI.class);
+    PlaylistAPI playlistAPI = mock(PlaylistAPI.class);
     when(playlistAPI.find(Category.PARTY)).thenReturn(createPlaylist(PARTY_SONG_NAMES));
     when(playlistAPI.find(Category.POP)).thenReturn(createPlaylist(POP_SONG_NAMES));
     when(playlistAPI.find(Category.ROCK)).thenReturn(createPlaylist(ROCK_SONG_NAMES));
