@@ -10,6 +10,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.security.InvalidParameterException;
+
 public class GeographicCoordinateValidatorTest {
 
   private GeographicCoordinateValidator geographicCoordinateValidator;
@@ -91,7 +93,7 @@ public class GeographicCoordinateValidatorTest {
     assertTrue(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
   }
 
-  @Test
+  @Test(expected = InvalidParameterException.class)
   public void testWithInvalidPositiveLatitude() {
 
     double latitude = 91.0;
@@ -103,7 +105,7 @@ public class GeographicCoordinateValidatorTest {
     assertTrue(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
   }
 
-  @Test
+  @Test(expected = InvalidParameterException.class)
   public void testWithInvalidPositiveLongitude() {
 
     double latitude = 45.0;
@@ -115,7 +117,7 @@ public class GeographicCoordinateValidatorTest {
     assertFalse(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
   }
 
-  @Test
+  @Test(expected = InvalidParameterException.class)
   public void testWithInvalidPositiveLatitudeAlmostValid() {
 
     double latitude = 90.0001;
@@ -127,7 +129,7 @@ public class GeographicCoordinateValidatorTest {
     assertTrue(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
   }
 
-  @Test
+  @Test(expected = InvalidParameterException.class)
   public void testWithInvalidPositiveLongitudeAlmostValid() {
 
     double latitude = 45.0;
@@ -139,7 +141,7 @@ public class GeographicCoordinateValidatorTest {
     assertFalse(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
   }
 
-  @Test
+  @Test(expected = InvalidParameterException.class)
   public void testWithInvalidNegativeLatitude() {
 
     double latitude = -91.0;
@@ -151,7 +153,7 @@ public class GeographicCoordinateValidatorTest {
     assertTrue(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
   }
 
-  @Test
+  @Test(expected = InvalidParameterException.class)
   public void testWithInvalidNegativeLongitude() {
 
     double latitude = 45.0;
@@ -163,7 +165,7 @@ public class GeographicCoordinateValidatorTest {
     assertFalse(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
   }
 
-  @Test
+  @Test(expected = InvalidParameterException.class)
   public void testWithInvalidNegativeLatitudeAlmostValid() {
 
     double latitude = -90.0001;
@@ -175,7 +177,7 @@ public class GeographicCoordinateValidatorTest {
     assertTrue(geographicCoordinateValidator.isLongitudeValid(geoCoordinate));
   }
 
-  @Test
+  @Test(expected = InvalidParameterException.class)
   public void testWithInvalidNegativeLongitudeAlmostValid() {
 
     double latitude = 45;
