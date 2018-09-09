@@ -5,7 +5,8 @@ import static br.com.ricardosander.weatherlist.dto.GeographicCoordinateValidator
 import static br.com.ricardosander.weatherlist.dto.GeographicCoordinateValidator.MINIMUM_LATITUDE;
 import static br.com.ricardosander.weatherlist.dto.GeographicCoordinateValidator.MINIMUM_LONGITUDE;
 
-import java.security.InvalidParameterException;
+import br.com.ricardosander.weatherlist.services.exceptions.InvalidParameterException;
+
 import java.util.Objects;
 
 public class GeographicCoordinate {
