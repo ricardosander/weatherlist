@@ -4,43 +4,77 @@ import br.com.ricardosander.weatherlist.entities.Category;
 import br.com.ricardosander.weatherlist.entities.Playlist;
 import br.com.ricardosander.weatherlist.entities.Track;
 import br.com.ricardosander.weatherlist.services.exceptions.ObjectNotFoundException;
+import com.wrapper.spotify.SpotifyApi;
+import com.wrapper.spotify.exceptions.SpotifyWebApiException;
+import com.wrapper.spotify.model_objects.credentials.ClientCredentials;
+import com.wrapper.spotify.model_objects.specification.Paging;
+import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
+import com.wrapper.spotify.model_objects.specification.PlaylistTrack;
+import com.wrapper.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
 
-import java.util.Arrays;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class SpotifyAPI implements PlaylistAPI {
 
-  private static final List<String> PARTY_SONG_NAMES =
-      Arrays.asList("Party 1", "Party 2", "Don't Stop the Party");
+  private final SpotifyApi spotifyApi;
 
-  private static final List<String> POP_SONG_NAMES = Arrays.asList("Pop 1", "Pop 2", "Pop Pop Pop");
+  public SpotifyAPI(String spotifyClientId, String spotifySecret) {
 
-  private static final List<String> ROCK_SONG_NAMES =
-      Arrays.asList("Rock 1", "Rock n Roll", "I Gonna Rock Your World");
-
-  private static final List<String> CLASSIC_SONG_NAMES =
-      Arrays.asList("Classic 1", "The Classic of the Classics", "Spring Framework");
+    spotifyApi = SpotifyApi.builder()
+        .setClientId(spotifyClientId)
+        .setClientSecret(spotifySecret)
+        .build();
+  }
 
   @Override
   public Playlist find(Category category) {
 
-    switch (category) {
-      case PARTY:
-        return createPlaylist(PARTY_SONG_NAMES);
-      case POP:
-        return createPlaylist(POP_SONG_NAMES);
-      case ROCK:
-        return createPlaylist(ROCK_SONG_NAMES);
-      case CLASSIC:
-        return createPlaylist(CLASSIC_SONG_NAMES);
+    try {
+
+      ClientCredentialsRequest clientCredentialsRequest = spotifyApi.clientCredentials().build();
+
+      ClientCredentials clientCredentials = clientCredentialsRequest.execute();
+      spotifyApi.setAccessToken(clientCredentials.getAccessToken());
+
+      switch (category) {
+        case PARTY:
+          return new Playlist(getTracks(spotifyApi, "party"));
+        case POP:
+          return new Playlist(getTracks(spotifyApi, "pop"));
+        case ROCK:
+          return new Playlist(getTracks(spotifyApi, "rock"));
+        case CLASSIC:
+          return new Playlist(getTracks(spotifyApi, "classical"));
+      }
+
+    } catch (SpotifyWebApiException | IOException e) {
+      e.printStackTrace();
     }
 
     throw new ObjectNotFoundException("Playlist for " + category + " not found.");
   }
 
-  private Playlist createPlaylist(List<String> songNames) {
-    return new Playlist(songNames.stream().map(Track::new).collect(Collectors.toList()));
+  private List<Track> getTracks(SpotifyApi spotifyApi, String category)
+      throws IOException, SpotifyWebApiException {
+
+    Paging<PlaylistSimplified> party =
+        spotifyApi.getCategorysPlaylists(category).build().execute();
+
+    String playListId = party.getItems()[0].getId();
+    String userId = party.getItems()[0].getOwner().getId();
+
+    com.wrapper.spotify.model_objects.specification.Playlist playlist =
+        spotifyApi.getPlaylist(userId, playListId).build().execute();
+
+    PlaylistTrack[] tracks = playlist.getTracks().getItems();
+
+    List<Track> myTracks = new ArrayList<>();
+    for (PlaylistTrack track : tracks) {
+      myTracks.add(new Track(track.getTrack().getName()));
+    }
+    return myTracks;
   }
 
 }
