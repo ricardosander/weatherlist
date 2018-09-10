@@ -1,6 +1,6 @@
 package br.com.ricardosander.weatherlist.entities;
 
-import static br.com.ricardosander.weatherlist.entities.Category.CLASSIC;
+import static br.com.ricardosander.weatherlist.entities.Category.CLASSICAL;
 import static br.com.ricardosander.weatherlist.entities.Category.PARTY;
 import static br.com.ricardosander.weatherlist.entities.Category.PARTY_TEMPERATURE_IN_CELCIUS;
 import static br.com.ricardosander.weatherlist.entities.Category.POP;
@@ -75,25 +75,25 @@ public class CategoryTest {
   @Test
   public void testBelowChillyTemperature() {
     Category category = Category.getInstance(new Weather(ROCK_TEMPERATURE_IN_CELCIUS - 1));
-    assertEquals(CLASSIC, category);
+    assertEquals(CLASSICAL, category);
   }
 
   @Test
   public void testAboveFreezingChillyTemperature() {
     Category category = Category.getInstance(new Weather(FREEZING_IN_CELCIUS + 1));
-    assertEquals(CLASSIC, category);
+    assertEquals(CLASSICAL, category);
   }
 
   @Test
   public void testFreezingChillyTemperature() {
     Category category = Category.getInstance(new Weather(FREEZING_IN_CELCIUS));
-    assertEquals(CLASSIC, category);
+    assertEquals(CLASSICAL, category);
   }
 
   @Test
   public void testBelowFreezingChillyTemperature() {
     Category category = Category.getInstance(new Weather(FREEZING_IN_CELCIUS - 1));
-    assertEquals(CLASSIC, category);
+    assertEquals(CLASSICAL, category);
   }
 
 }

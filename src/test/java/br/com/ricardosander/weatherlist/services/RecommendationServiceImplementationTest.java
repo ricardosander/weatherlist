@@ -103,7 +103,7 @@ public class RecommendationServiceImplementationTest {
     when(playlistAPI.find(Category.PARTY)).thenReturn(createPlaylist(PARTY_SONG_NAMES));
     when(playlistAPI.find(Category.POP)).thenReturn(createPlaylist(POP_SONG_NAMES));
     when(playlistAPI.find(Category.ROCK)).thenReturn(createPlaylist(ROCK_SONG_NAMES));
-    when(playlistAPI.find(Category.CLASSIC)).thenReturn(createPlaylist(CLASSIC_SONG_NAMES));
+    when(playlistAPI.find(Category.CLASSICAL)).thenReturn(createPlaylist(CLASSIC_SONG_NAMES));
 
     recommendationService = new RecommendationServiceImplementation(weatherAPI, playlistAPI);
   }

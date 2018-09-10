@@ -5,7 +5,7 @@ public enum Category {
   PARTY,
   POP,
   ROCK,
-  CLASSIC;
+  CLASSICAL;
 
   static final double PARTY_TEMPERATURE_IN_CELCIUS = 30.0;
   static final double POP_TEMPERATURE_IN_CELCIUS = 15.0;
@@ -25,7 +25,7 @@ public enum Category {
       return ROCK;
     }
 
-    return CLASSIC;
+    return CLASSICAL;
   }
 
 }
