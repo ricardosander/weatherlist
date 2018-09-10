@@ -33,27 +33,35 @@ public class SpotifyAPI implements PlaylistAPI {
 
     try {
 
-      ClientCredentialsRequest clientCredentialsRequest = spotifyApi.clientCredentials().build();
-
-      ClientCredentials clientCredentials = clientCredentialsRequest.execute();
-      spotifyApi.setAccessToken(clientCredentials.getAccessToken());
-
-      switch (category) {
-        case PARTY:
-          return new Playlist(getTracks(spotifyApi, "party"));
-        case POP:
-          return new Playlist(getTracks(spotifyApi, "pop"));
-        case ROCK:
-          return new Playlist(getTracks(spotifyApi, "rock"));
-        case CLASSIC:
-          return new Playlist(getTracks(spotifyApi, "classical"));
+      if (!isAuthenticated()) {
+        authenticate();
       }
 
+      return new Playlist(getTracks(spotifyApi, category.getLowerCase()));
+
     } catch (SpotifyWebApiException | IOException e) {
-      e.printStackTrace();
+      e.printStackTrace();//TODO handle
     }
 
     throw new ObjectNotFoundException("Playlist for " + category + " not found.");
+  }
+
+  private void authenticate() {
+
+    ClientCredentialsRequest clientCredentialsRequest = spotifyApi.clientCredentials().build();
+    ClientCredentials clientCredentials = null;
+
+    try {
+      clientCredentials = clientCredentialsRequest.execute();
+    } catch (IOException | SpotifyWebApiException e) {
+      e.printStackTrace();//TODO handle
+    }
+
+    spotifyApi.setAccessToken(clientCredentials.getAccessToken());
+  }
+
+  private boolean isAuthenticated() {
+    return spotifyApi.getAccessToken() != null && !spotifyApi.getAccessToken().isEmpty();
   }
 
   private List<Track> getTracks(SpotifyApi spotifyApi, String category)
