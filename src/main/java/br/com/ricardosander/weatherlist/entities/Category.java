@@ -28,4 +28,8 @@ public enum Category {
     return CLASSICAL;
   }
 
+  public String getLowerCase() {
+    return this.toString().toLowerCase();
+  }
+
 }
