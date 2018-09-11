@@ -7,6 +7,8 @@ import static br.com.ricardosander.weatherlist.dto.GeographicCoordinateValidator
 
 import br.com.ricardosander.weatherlist.services.exceptions.InvalidParameterException;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 public class GeographicCoordinate {
@@ -23,6 +25,8 @@ public class GeographicCoordinate {
   private static final String INVALID_GEOGRAPHIC_COORDINATES =
       INVALID_LATITUDE_MESSAGE + " and " + INVALID_LONGITUDE_MESSAGE;
 
+  private static final int ROUND_SCALE = 2;
+
   private final double latitude;
 
   private final double longitude;
@@ -34,7 +38,14 @@ public class GeographicCoordinate {
 
   public static GeographicCoordinate newInstance(double latitude, double longitude) {
 
-    GeographicCoordinate geoCoordinate = new GeographicCoordinate(latitude, longitude);
+    final double roundedLatitude =
+        BigDecimal.valueOf(latitude).setScale(ROUND_SCALE, RoundingMode.HALF_EVEN).doubleValue();
+
+    final double roundedLongitude =
+        BigDecimal.valueOf(longitude).setScale(ROUND_SCALE, RoundingMode.HALF_EVEN).doubleValue();
+
+    GeographicCoordinate geoCoordinate =
+        new GeographicCoordinate(roundedLatitude, roundedLongitude);
 
     if (validator.isLatitudeValid(geoCoordinate) && validator.isLongitudeValid(geoCoordinate)) {
       return geoCoordinate;
