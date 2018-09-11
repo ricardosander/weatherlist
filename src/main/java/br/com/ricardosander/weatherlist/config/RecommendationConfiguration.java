@@ -4,6 +4,8 @@ import br.com.ricardosander.weatherlist.apis.PlaylistApiConfiguration;
 import br.com.ricardosander.weatherlist.apis.OpenWeatherMapAPI;
 import br.com.ricardosander.weatherlist.apis.PlaylistAPI;
 import br.com.ricardosander.weatherlist.apis.WeatherAPI;
+import br.com.ricardosander.weatherlist.apis.WeatherApiConfiguration;
+import br.com.ricardosander.weatherlist.apis.openweatherapi.OpenWeatherMapConfiguration;
 import br.com.ricardosander.weatherlist.apis.spotify.SpotifyAPI;
 import br.com.ricardosander.weatherlist.apis.spotify.SpotifyConfiguration;
 import br.com.ricardosander.weatherlist.services.RecommendationService;
@@ -26,8 +28,9 @@ public class RecommendationConfiguration {
   }
 
   @Bean
-  public WeatherAPI weatherAPI() {
-    return new OpenWeatherMapAPI();
+  @Autowired
+  public WeatherAPI weatherAPI(WeatherApiConfiguration weatherApiConfiguration) {
+    return new OpenWeatherMapAPI((OpenWeatherMapConfiguration) weatherApiConfiguration);
   }
 
   @Bean
@@ -45,6 +48,12 @@ public class RecommendationConfiguration {
       @Value("${spotify.playListCacheTimeInMinutes}") int playListCacheTimeInMinutes) {
     return new SpotifyConfiguration(clientId, secret, limitPlaylistTracks,
         playListCacheInfoTimeInMinutes, playListCacheTimeInMinutes);
+  }
+
+  @Bean
+  public OpenWeatherMapConfiguration openWeatherMapConfiguration(
+      @Value("${openWeatherMap.key}") String key) {
+    return new OpenWeatherMapConfiguration(key);
   }
 
 }
