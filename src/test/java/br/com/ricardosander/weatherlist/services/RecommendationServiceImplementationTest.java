@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import br.com.ricardosander.weatherlist.apis.PlaylistAPI;
 import br.com.ricardosander.weatherlist.apis.WeatherAPI;
+import br.com.ricardosander.weatherlist.apis.exceptions.ApiUnavailableException;
 import br.com.ricardosander.weatherlist.dto.GeographicCoordinate;
 import br.com.ricardosander.weatherlist.entities.Category;
 import br.com.ricardosander.weatherlist.entities.Playlist;
@@ -70,7 +71,7 @@ public class RecommendationServiceImplementationTest {
   private RecommendationService recommendationService;
 
   @Before
-  public void setUp() {
+  public void setUp() throws ApiUnavailableException {
 
     WeatherAPI weatherAPI = mock(WeatherAPI.class);
 
