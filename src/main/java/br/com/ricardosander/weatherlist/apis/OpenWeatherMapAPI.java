@@ -1,59 +1,49 @@
 package br.com.ricardosander.weatherlist.apis;
 
+import br.com.ricardosander.weatherlist.apis.openweatherapi.OpenWeatherMapConfiguration;
 import br.com.ricardosander.weatherlist.dto.GeographicCoordinate;
 import br.com.ricardosander.weatherlist.entities.Weather;
 import br.com.ricardosander.weatherlist.services.exceptions.ObjectNotFoundException;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import net.aksingh.owmjapis.api.APIException;
+import net.aksingh.owmjapis.core.OWM;
+import net.aksingh.owmjapis.model.CurrentWeather;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 public class OpenWeatherMapAPI implements WeatherAPI {
 
-  private static final String VERY_HOT_CITY_NAME = "Natal";
-  private static final String HOT_CITY_NAME = "Campinas";
-  private static final String CHILLY_CITY_NAME = "Curitiba";
-  private static final String FREEZING_CITY_NAME = "Porto Alegre";
+  private final OWM openWeatherMapApi;
 
-  private static final double VERY_HOT_LATITUDE = 11.26;
-  private static final double VERY_HOT_LONGITUDE = 13.47;
-  private static final double HOT_LATITUDE = -15.68;
-  private static final double HOT_LONGITUDE = 17.89;
-  private static final double CHILLY_LATITUDE = 20.90;
-  private static final double CHILLY_LONGITUDE = -21.11;
-  private static final double FREEZING_LATITUDE = -21.52;
-  private static final double FREEZING_LONGITUDE = -21.43;
+  private final Cache<String, Weather> cityWeatherCache;
 
-  private final GeographicCoordinate veryHotGeographicCoordinate =
-      GeographicCoordinate.newInstance(VERY_HOT_LATITUDE, VERY_HOT_LONGITUDE);
+  public OpenWeatherMapAPI(OpenWeatherMapConfiguration weatherApiConfiguration) {
 
-  private final GeographicCoordinate hotGeographicCoordinate =
-      GeographicCoordinate.newInstance(HOT_LATITUDE, HOT_LONGITUDE);
+    openWeatherMapApi = new OWM(weatherApiConfiguration.getKey());
 
-  private final GeographicCoordinate chillyGeographicCoordinate =
-      GeographicCoordinate.newInstance(CHILLY_LATITUDE, CHILLY_LONGITUDE);
+    cityWeatherCache = CacheBuilder
+        .newBuilder()
+        .expireAfterAccess(1, TimeUnit.MINUTES)
+        .build();
 
-  private final GeographicCoordinate freezingGeographicCoordinate =
-      GeographicCoordinate.newInstance(FREEZING_LATITUDE, FREEZING_LONGITUDE);
+  }
 
   @Override
   public Weather findWeatherByCityName(String cityName) {
 
-    if (cityName.equals(VERY_HOT_CITY_NAME)) {
+    try {
 
-      double veryHotTemperatureInCelcius = 31.0;
-      return new Weather(veryHotTemperatureInCelcius);
-    }
+      return cityWeatherCache.get(cityName, () -> {
 
-    if (cityName.equals(HOT_CITY_NAME)) {
-      double hotTemperatureInCelcius = 28.0;
-      return new Weather(hotTemperatureInCelcius);
-    }
+        CurrentWeather currentWeather = openWeatherMapApi.currentWeatherByCityName(cityName);
 
-    if (cityName.equals(CHILLY_CITY_NAME)) {
-      double chillyTemperatureInCelcius = 12.0;
-      return new Weather(chillyTemperatureInCelcius);
-    }
+        return new Weather(currentWeather.getMainData().getTemp() - 273);
+      });
 
-    if (cityName.equals(FREEZING_CITY_NAME)) {
-      double freezingTemperatureInCelcius = 6.0;
-      return new Weather(freezingTemperatureInCelcius);
+    } catch (ExecutionException e) {
+      e.printStackTrace();
     }
 
     throw new ObjectNotFoundException("City with city name " + cityName + " not found.");
@@ -62,24 +52,16 @@ public class OpenWeatherMapAPI implements WeatherAPI {
   @Override
   public Weather findWeather(GeographicCoordinate geographicCoordinate) {
 
-    if (geographicCoordinate.equals(veryHotGeographicCoordinate)) {
-      double veryHotTemperatureInCelcius = 31.0;
-      return new Weather(veryHotTemperatureInCelcius);
-    }
+    try {
 
-    if (geographicCoordinate.equals(hotGeographicCoordinate)) {
-      double hotTemperatureInCelcius = 28.0;
-      return new Weather(hotTemperatureInCelcius);
-    }
+      final CurrentWeather currentWeather =
+          openWeatherMapApi.currentWeatherByCoords(geographicCoordinate.getLatitude(),
+              geographicCoordinate.getLongitude());
 
-    if (geographicCoordinate.equals(chillyGeographicCoordinate)) {
-      double chillyTemperatureInCelcius = 12.0;
-      return new Weather(chillyTemperatureInCelcius);
-    }
+      return new Weather(currentWeather.getMainData().getTemp() - 273);
 
-    if (geographicCoordinate.equals(freezingGeographicCoordinate)) {
-      double freezingTemperatureInCelcius = 6.0;
-      return new Weather(freezingTemperatureInCelcius);
+    } catch (APIException e) {
+      e.printStackTrace();
     }
 
     throw new ObjectNotFoundException(geographicCoordinate.toString() + " not found.");
