@@ -1,5 +1,7 @@
 package br.com.ricardosander.weatherlist.apis;
 
+import br.com.ricardosander.weatherlist.apis.exceptions.ApiUnavailableException;
+import br.com.ricardosander.weatherlist.apis.exceptions.SpotifyApiUnavailableException;
 import br.com.ricardosander.weatherlist.entities.Category;
 import br.com.ricardosander.weatherlist.entities.Playlist;
 import br.com.ricardosander.weatherlist.entities.Track;
@@ -29,7 +31,7 @@ public class SpotifyAPI implements PlaylistAPI {
   }
 
   @Override
-  public Playlist find(Category category) {
+  public Playlist find(Category category) throws ApiUnavailableException {
 
     try {
 
@@ -37,16 +39,20 @@ public class SpotifyAPI implements PlaylistAPI {
         authenticate();
       }
 
-      return new Playlist(getTracks(spotifyApi, category.getLowerCase()));
+      List<Track> trackList = getTracks(spotifyApi, category.getLowerCase());
+      if (!trackList.isEmpty()) {
+        return new Playlist(trackList);
+      }
 
     } catch (SpotifyWebApiException | IOException e) {
-      e.printStackTrace();//TODO handle
+      spotifyApi.setAccessToken(null);
+      throw new SpotifyApiUnavailableException(e.getMessage());
     }
 
     throw new ObjectNotFoundException("Playlist for " + category + " not found.");
   }
 
-  private void authenticate() {
+  private void authenticate() throws SpotifyApiUnavailableException {
 
     ClientCredentialsRequest clientCredentialsRequest = spotifyApi.clientCredentials().build();
     ClientCredentials clientCredentials = null;
@@ -54,7 +60,7 @@ public class SpotifyAPI implements PlaylistAPI {
     try {
       clientCredentials = clientCredentialsRequest.execute();
     } catch (IOException | SpotifyWebApiException e) {
-      e.printStackTrace();//TODO handle
+      throw new SpotifyApiUnavailableException(e.getMessage());
     }
 
     spotifyApi.setAccessToken(clientCredentials.getAccessToken());
