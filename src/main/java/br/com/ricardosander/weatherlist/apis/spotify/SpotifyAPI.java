@@ -46,12 +46,12 @@ public class SpotifyAPI implements PlaylistAPI {
 
     playlistInfoCache = CacheBuilder
         .newBuilder()
-        .expireAfterWrite(configuration.getPlayListCacheInfoTimeInMinutes(), TimeUnit.SECONDS)
+        .expireAfterWrite(configuration.getPlayListCacheInfoTimeInMinutes(), TimeUnit.MINUTES)
         .build();
 
     playlistCache = CacheBuilder
         .newBuilder()
-        .expireAfterWrite(configuration.getPlayListCacheTimeInMinutes(), TimeUnit.SECONDS)
+        .expireAfterWrite(configuration.getPlayListCacheTimeInMinutes(), TimeUnit.MINUTES)
         .build();
 
     limitPlaylistTracks = configuration.getLimitPlaylistTracks();
