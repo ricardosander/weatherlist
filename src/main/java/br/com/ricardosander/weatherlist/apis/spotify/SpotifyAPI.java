@@ -7,6 +7,8 @@ import br.com.ricardosander.weatherlist.entities.Category;
 import br.com.ricardosander.weatherlist.entities.Playlist;
 import br.com.ricardosander.weatherlist.entities.Track;
 import br.com.ricardosander.weatherlist.services.exceptions.ObjectNotFoundException;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.wrapper.spotify.SpotifyApi;
 import com.wrapper.spotify.exceptions.SpotifyWebApiException;
 import com.wrapper.spotify.model_objects.credentials.ClientCredentials;
@@ -18,21 +20,41 @@ import com.wrapper.spotify.requests.authorization.client_credentials.ClientCrede
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 public class SpotifyAPI implements PlaylistAPI {
 
   private static final int LIMIT_PLAYLIST_TO_SEARCH = 1;
+
   private static final String TRACK_FIELDS_TO_RETRIEVE = "items(track.name)";
-  private static final int LIMIT_TRACKS_TO_SEARCH = 30;
 
   private final SpotifyApi spotifyApi;
 
-  public SpotifyAPI(String spotifyClientId, String spotifySecret) {
+  private final Cache<Category, SpotifyPlaylistDTO> playlistInfoCache;
+
+  private final Cache<Category, Playlist> playlistCache;
+
+  private final int limitPlaylistTracks;
+
+  public SpotifyAPI(SpotifyConfiguration configuration) {
 
     spotifyApi = SpotifyApi.builder()
-        .setClientId(spotifyClientId)
-        .setClientSecret(spotifySecret)
+        .setClientId(configuration.getClientId())
+        .setClientSecret(configuration.getSecret())
         .build();
+
+    playlistInfoCache = CacheBuilder
+        .newBuilder()
+        .expireAfterWrite(configuration.getPlayListCacheInfoTimeInMinutes(), TimeUnit.SECONDS)
+        .build();
+
+    playlistCache = CacheBuilder
+        .newBuilder()
+        .expireAfterWrite(configuration.getPlayListCacheTimeInMinutes(), TimeUnit.SECONDS)
+        .build();
+
+    limitPlaylistTracks = configuration.getLimitPlaylistTracks();
   }
 
   @Override
@@ -40,13 +62,17 @@ public class SpotifyAPI implements PlaylistAPI {
 
     try {
 
-      if (!isAuthenticated()) {
-        authenticate();
-      }
+      return playlistCache.get(category, () -> {
 
-      return getPlaylist(category.getLowerCase());
+            if (!isAuthenticated()) {
+              authenticate();
+            }
 
-    } catch (SpotifyWebApiException | IOException e) {
+            return getPlaylist(category);
+          }
+      );
+
+    } catch (ExecutionException e) {
       spotifyApi.setAccessToken(null);
       throw new SpotifyApiUnavailableException(e.getMessage());
     }
@@ -71,8 +97,8 @@ public class SpotifyAPI implements PlaylistAPI {
     return spotifyApi.getAccessToken() != null && !spotifyApi.getAccessToken().isEmpty();
   }
 
-  private Playlist getPlaylist(String category)
-      throws IOException, SpotifyWebApiException {
+  private Playlist getPlaylist(Category category)
+      throws IOException, SpotifyWebApiException, ExecutionException {
 
     SpotifyPlaylistDTO spotifyPlaylist = getPlaylistInfo(category);
 
@@ -87,20 +113,25 @@ public class SpotifyAPI implements PlaylistAPI {
     return new Playlist(myTracks);
   }
 
-  private SpotifyPlaylistDTO getPlaylistInfo(String category)
-      throws IOException, SpotifyWebApiException {
+  private SpotifyPlaylistDTO getPlaylistInfo(Category category) throws ExecutionException {
 
-    Paging<PlaylistSimplified> playlistResult = spotifyApi.getCategorysPlaylists(category)
-        .limit(LIMIT_PLAYLIST_TO_SEARCH)
-        .build()
-        .execute();
+    return
+        playlistInfoCache.get(category, () -> {
 
-    if (playlistResult.getItems().length == 0) {
-      throw new ObjectNotFoundException("Playlist for " + category + " not found.");
-    }
+          Paging<PlaylistSimplified> playlistResult =
+              spotifyApi.getCategorysPlaylists(category.getLowerCase())
+                  .limit(LIMIT_PLAYLIST_TO_SEARCH)
+                  .build()
+                  .execute();
 
-    return new SpotifyPlaylistDTO(playlistResult.getItems()[0].getId(),
-        playlistResult.getItems()[0].getOwner().getId());
+          if (playlistResult.getItems().length == 0) {
+            throw new ObjectNotFoundException("Playlist for " + category + " not found.");
+          }
+
+          return new SpotifyPlaylistDTO(playlistResult.getItems()[0].getId(),
+              playlistResult.getItems()[0].getOwner().getId());
+        });
+
   }
 
   private PlaylistTrack[] getPlaylistTracks(SpotifyPlaylistDTO spotifyPlaylist)
@@ -109,7 +140,7 @@ public class SpotifyAPI implements PlaylistAPI {
     Paging<PlaylistTrack> playlistTrackPaging =
         spotifyApi.getPlaylistsTracks(spotifyPlaylist.getOwnerId(), spotifyPlaylist.getId())
             .fields(TRACK_FIELDS_TO_RETRIEVE)
-            .limit(LIMIT_TRACKS_TO_SEARCH)
+            .limit(limitPlaylistTracks)
             .build()
             .execute();
 
