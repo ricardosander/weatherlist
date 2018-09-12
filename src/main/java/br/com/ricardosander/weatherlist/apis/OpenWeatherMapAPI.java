@@ -1,6 +1,8 @@
 package br.com.ricardosander.weatherlist.apis;
 
+import br.com.ricardosander.weatherlist.apis.exceptions.ApiUnavailableException;
 import br.com.ricardosander.weatherlist.apis.openweatherapi.OpenWeatherMapConfiguration;
+import br.com.ricardosander.weatherlist.apis.openweatherapi.exceptions.OpenWeatherMapApiUnavailableException;
 import br.com.ricardosander.weatherlist.dto.GeographicCoordinate;
 import br.com.ricardosander.weatherlist.entities.Weather;
 import br.com.ricardosander.weatherlist.services.exceptions.ObjectNotFoundException;
@@ -37,7 +39,7 @@ public class OpenWeatherMapAPI implements WeatherAPI {
   }
 
   @Override
-  public Weather findWeatherByCityName(String cityName) {
+  public Weather findWeatherByCityName(String cityName) throws ApiUnavailableException {
 
     try {
 
@@ -66,14 +68,14 @@ public class OpenWeatherMapAPI implements WeatherAPI {
       });
 
     } catch (ExecutionException e) {
-      e.printStackTrace();//TODO handle exception
+      throw new OpenWeatherMapApiUnavailableException(e.getMessage());
     }
 
-    throw new ObjectNotFoundException("City with city name " + cityName + " not found.");
   }
 
   @Override
-  public Weather findWeather(GeographicCoordinate geographicCoordinate) {
+  public Weather findWeather(GeographicCoordinate geographicCoordinate)
+      throws ApiUnavailableException {
 
     try {
 
@@ -100,10 +102,9 @@ public class OpenWeatherMapAPI implements WeatherAPI {
       });
 
     } catch (ExecutionException e) {
-      e.printStackTrace();//TODO handle exception
+      throw new OpenWeatherMapApiUnavailableException(e.getMessage());
     }
 
-    throw new ObjectNotFoundException(geographicCoordinate.toString() + " not found.");
   }
 
 }
