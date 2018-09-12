@@ -14,15 +14,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/recommendation")
-public class RecommendationController {
+@RequestMapping(value = "/playlist")
+public class PlaylistController {
 
-  private final Logger logger = LoggerFactory.getLogger(RecommendationController.class);
+  private final Logger logger = LoggerFactory.getLogger(PlaylistController.class);
 
   private final RecommendationService recommendationService;
 
   @Autowired
-  public RecommendationController(
+  public PlaylistController(
       RecommendationService recommendationService) {
     logger.info("Creating RecommendationController");
     this.recommendationService = recommendationService;
