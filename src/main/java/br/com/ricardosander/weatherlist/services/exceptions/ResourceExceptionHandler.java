@@ -31,8 +31,8 @@ public class ResourceExceptionHandler {
 
     HttpStatus status = HttpStatus.NOT_FOUND;
     StandardError standardError =
-        new StandardError(System.currentTimeMillis(), status.value(), NOT_FOUND_ERROR,
-            exception.getMessage(), request.getRequestURI());
+        new StandardError(status.value(), NOT_FOUND_ERROR, exception.getMessage(),
+            request.getRequestURI());
 
     return ResponseEntity.status(status).body(standardError);
   }
@@ -45,8 +45,8 @@ public class ResourceExceptionHandler {
 
     HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
     StandardError standardError =
-        new StandardError(System.currentTimeMillis(), status.value(), INVALID_PARAMETER_ERROR,
-            exception.getMessage(), request.getRequestURI());
+        new StandardError(status.value(), INVALID_PARAMETER_ERROR, exception.getMessage(),
+            request.getRequestURI());
 
     return ResponseEntity.status(status).body(standardError);
   }
@@ -57,7 +57,7 @@ public class ResourceExceptionHandler {
 
     HttpStatus status = HttpStatus.BAD_REQUEST;
     StandardError standardError =
-        new StandardError(System.currentTimeMillis(), status.value(), status.name(),
+        new StandardError(status.value(), status.name(),
             String.format(MISSING_PARAMETER_MESSAGE, exception.getParameterName()),
             request.getRequestURI());
 
@@ -70,7 +70,7 @@ public class ResourceExceptionHandler {
 
     HttpStatus status = HttpStatus.BAD_REQUEST;
     StandardError standardError =
-        new StandardError(System.currentTimeMillis(), status.value(), status.name(),
+        new StandardError(status.value(), status.name(),
             String.format(INVALID_PARAMETER_MESSAGE, exception.getName()), request.getRequestURI());
 
     return ResponseEntity.status(status).body(standardError);
@@ -82,8 +82,8 @@ public class ResourceExceptionHandler {
 
     HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
     StandardError standardError =
-        new StandardError(System.currentTimeMillis(), status.value(), UNEXPECTED_ERROR,
-            TRY_AGAIN_LATER + exception.toString(), request.getRequestURI());
+        new StandardError(status.value(), UNEXPECTED_ERROR, TRY_AGAIN_LATER + exception.toString(),
+            request.getRequestURI());
 
     return ResponseEntity.status(status).body(standardError);
   }
