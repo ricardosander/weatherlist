@@ -31,7 +31,7 @@ public class ResourceExceptionHandlerTest {
         new ObjectNotFoundException(message);
 
     ResponseEntity<StandardError> responseEntity =
-        resourceExceptionHandler.objectNotFound(exception, request);
+        resourceExceptionHandler.handleException(exception, request);
 
     assertNotNull(responseEntity);
     assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
@@ -48,7 +48,7 @@ public class ResourceExceptionHandlerTest {
         new InvalidParameterException(message);
 
     ResponseEntity<StandardError> responseEntity =
-        resourceExceptionHandler.invalidParameterException(exception, request);
+        resourceExceptionHandler.handleException(exception, request);
 
     assertNotNull(responseEntity);
     assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
