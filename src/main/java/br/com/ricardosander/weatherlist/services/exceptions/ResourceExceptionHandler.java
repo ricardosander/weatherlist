@@ -80,9 +80,11 @@ public class ResourceExceptionHandler {
   public ResponseEntity<StandardError> handleException(Exception exception,
       HttpServletRequest request) {
 
+    logger.error(exception.getMessage());
+
     HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
     StandardError standardError =
-        new StandardError(status.value(), UNEXPECTED_ERROR, TRY_AGAIN_LATER + exception.toString(),
+        new StandardError(status.value(), UNEXPECTED_ERROR, TRY_AGAIN_LATER,
             request.getRequestURI());
 
     return ResponseEntity.status(status).body(standardError);
