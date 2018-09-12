@@ -32,10 +32,11 @@ public class RecommendationServiceImplementation implements RecommendationServic
   @Override
   public Playlist getPlaylist(GeographicCoordinate geographicCoordinate) {
 
-    Weather weather = weatherAPI.findWeather(geographicCoordinate);
-    Category category = Category.getInstance(weather);
-
     try {
+
+      Weather weather = weatherAPI.findWeather(geographicCoordinate);
+      Category category = Category.getInstance(weather);
+
       return playlistAPI.find(category);
     } catch (ApiUnavailableException e) {
       return defaultPlaylist;
@@ -45,10 +46,11 @@ public class RecommendationServiceImplementation implements RecommendationServic
   @Override
   public Playlist getPlaylistByCityName(String cityName) {
 
-    Weather weather = weatherAPI.findWeatherByCityName(cityName);
-    Category category = Category.getInstance(weather);
-
     try {
+
+      Weather weather = weatherAPI.findWeatherByCityName(cityName);
+      Category category = Category.getInstance(weather);
+
       return playlistAPI.find(category);
     } catch (ApiUnavailableException e) {
       return defaultPlaylist;
