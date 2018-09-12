@@ -60,9 +60,17 @@ public class RecommendationConfiguration {
 
   @Bean
   public OpenWeatherMapConfiguration openWeatherMapConfiguration(
-      @Value("${openWeatherMap.key}") String key) {
+      @Value("${openWeatherMap.key}") String key,
+      @Value("${openWeatherMap.cityCacheTimeInMinutes}")
+          int cityCacheTimeInMinutes,
+      @Value("${openWeatherMap.geoCoordinatesCacheTimeInMinutes}")
+          int geoCoordinatesCacheTimeInMinutes,
+      @Value("${openWeatherMap.cityCacheSize}") int cityCacheSize,
+      @Value("${openWeatherMap.geoCoordinatesCacheTimeInMinutes}")
+          int geoCoordinatesCacheSize) {
     logger.info("Creating OpenWeatherMapConfiguration");
-    return new OpenWeatherMapConfiguration(key);
+    return new OpenWeatherMapConfiguration(key, cityCacheTimeInMinutes,
+        geoCoordinatesCacheTimeInMinutes, cityCacheSize, geoCoordinatesCacheSize);
   }
 
 }

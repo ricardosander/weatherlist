@@ -31,12 +31,15 @@ public class OpenWeatherMapAPI implements WeatherAPI {
 
     cityWeatherCache = CacheBuilder
         .newBuilder()
-        .expireAfterAccess(1, TimeUnit.MINUTES)
+        .expireAfterAccess(weatherApiConfiguration.getCityCacheTimeInMinutes(), TimeUnit.MINUTES)
+        .maximumSize(weatherApiConfiguration.getCityCacheSize())
         .build();
 
     geoCoordinateWeatherCache = CacheBuilder
         .newBuilder()
-        .expireAfterAccess(1, TimeUnit.MINUTES)
+        .expireAfterAccess(weatherApiConfiguration.getGeoCoordinatesCacheTimeInMinutes(),
+            TimeUnit.MINUTES)
+        .maximumSize(weatherApiConfiguration.getGeoCoordinatesCacheSize())
         .build();
 
   }
