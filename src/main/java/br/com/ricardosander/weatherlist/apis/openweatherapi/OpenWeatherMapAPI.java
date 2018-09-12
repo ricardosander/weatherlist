@@ -82,22 +82,6 @@ public class OpenWeatherMapAPI implements WeatherAPI {
 
   }
 
-  private GeographicCoordinate translateToGeographicCootdinates(CurrentWeather currentWeather) {
-    return GeographicCoordinate.newInstance(currentWeather.getCoordData().getLatitude(),
-        currentWeather.getCoordData().getLongitude());
-  }
-
-  private boolean hasGeographicCoordinates(CurrentWeather currentWeather) {
-    return currentWeather.getCoordData() != null
-        && currentWeather.getCoordData().getLatitude() != null
-        && currentWeather.getCoordData().getLongitude() != null;
-  }
-
-  private boolean hasNoTempData(CurrentWeather currentWeather) {
-    return currentWeather.getMainData() == null
-        || currentWeather.getMainData().getTemp() == null;
-  }
-
   @Override
   public Weather findWeather(GeographicCoordinate geographicCoordinate)
       throws ApiUnavailableException {
@@ -137,6 +121,22 @@ public class OpenWeatherMapAPI implements WeatherAPI {
       throw new OpenWeatherMapApiUnavailableException(e.getMessage());
     }
 
+  }
+
+  private GeographicCoordinate translateToGeographicCootdinates(CurrentWeather currentWeather) {
+    return GeographicCoordinate.newInstance(currentWeather.getCoordData().getLatitude(),
+        currentWeather.getCoordData().getLongitude());
+  }
+
+  private boolean hasGeographicCoordinates(CurrentWeather currentWeather) {
+    return currentWeather.getCoordData() != null
+        && currentWeather.getCoordData().getLatitude() != null
+        && currentWeather.getCoordData().getLongitude() != null;
+  }
+
+  private boolean hasNoTempData(CurrentWeather currentWeather) {
+    return currentWeather.getMainData() == null
+        || currentWeather.getMainData().getTemp() == null;
   }
 
 }
