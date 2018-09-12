@@ -1,7 +1,7 @@
 package br.com.ricardosander.weatherlist.config;
 
 import br.com.ricardosander.weatherlist.apis.PlaylistApiConfiguration;
-import br.com.ricardosander.weatherlist.apis.OpenWeatherMapAPI;
+import br.com.ricardosander.weatherlist.apis.openweatherapi.OpenWeatherMapAPI;
 import br.com.ricardosander.weatherlist.apis.PlaylistAPI;
 import br.com.ricardosander.weatherlist.apis.WeatherAPI;
 import br.com.ricardosander.weatherlist.apis.WeatherApiConfiguration;

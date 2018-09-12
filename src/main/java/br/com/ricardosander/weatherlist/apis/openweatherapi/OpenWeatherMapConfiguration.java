@@ -10,7 +10,7 @@ public class OpenWeatherMapConfiguration implements WeatherApiConfiguration {
     this.key = key;
   }
 
-  public String getKey() {
+  String getKey() {
     return key;
   }
 

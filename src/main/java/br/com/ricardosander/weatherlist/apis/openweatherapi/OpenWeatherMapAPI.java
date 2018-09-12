@@ -1,8 +1,7 @@
-package br.com.ricardosander.weatherlist.apis;
+package br.com.ricardosander.weatherlist.apis.openweatherapi;
 
+import br.com.ricardosander.weatherlist.apis.WeatherAPI;
 import br.com.ricardosander.weatherlist.apis.exceptions.ApiUnavailableException;
-import br.com.ricardosander.weatherlist.apis.openweatherapi.OpenWeatherMapConfiguration;
-import br.com.ricardosander.weatherlist.apis.openweatherapi.exceptions.OpenWeatherMapApiUnavailableException;
 import br.com.ricardosander.weatherlist.dto.GeographicCoordinate;
 import br.com.ricardosander.weatherlist.entities.Weather;
 import br.com.ricardosander.weatherlist.services.exceptions.ObjectNotFoundException;

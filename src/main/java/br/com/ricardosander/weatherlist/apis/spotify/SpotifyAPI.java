@@ -2,7 +2,6 @@ package br.com.ricardosander.weatherlist.apis.spotify;
 
 import br.com.ricardosander.weatherlist.apis.PlaylistAPI;
 import br.com.ricardosander.weatherlist.apis.exceptions.ApiUnavailableException;
-import br.com.ricardosander.weatherlist.apis.spotify.exceptions.SpotifyApiUnavailableException;
 import br.com.ricardosander.weatherlist.entities.Category;
 import br.com.ricardosander.weatherlist.entities.Playlist;
 import br.com.ricardosander.weatherlist.entities.Track;
