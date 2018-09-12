@@ -76,22 +76,22 @@ public class RecommendationServiceImplementationTest {
     WeatherAPI weatherAPI = mock(WeatherAPI.class);
 
     double veryHotTemperatureInCelcius = 31.0;
-    Weather veryHotWeather = new Weather(veryHotTemperatureInCelcius);
+    Weather veryHotWeather = Weather.fromCelcius(veryHotTemperatureInCelcius);
     when(weatherAPI.findWeatherByCityName(VERY_HOT_CITY_NAME)).thenReturn(veryHotWeather);
     when(weatherAPI.findWeather(veryHotGeographicCoordinate)).thenReturn(veryHotWeather);
 
     double hotTemperatureInCelcius = 28.0;
-    Weather hotWeather = new Weather(hotTemperatureInCelcius);
+    Weather hotWeather = Weather.fromCelcius(hotTemperatureInCelcius);
     when(weatherAPI.findWeatherByCityName(HOT_CITY_NAME)).thenReturn(hotWeather);
     when(weatherAPI.findWeather(hotGeographicCoordinate)).thenReturn(hotWeather);
 
     double chillyTemperatureInCelcius = 12.0;
-    Weather chillyWeather = new Weather(chillyTemperatureInCelcius);
+    Weather chillyWeather = Weather.fromCelcius(chillyTemperatureInCelcius);
     when(weatherAPI.findWeatherByCityName(CHILLY_CITY_NAME)).thenReturn(chillyWeather);
     when(weatherAPI.findWeather(chillyGeographicCoordinate)).thenReturn(chillyWeather);
 
     double freezingTemperatureInCelcius = 6.0;
-    Weather freezingWeather = new Weather(freezingTemperatureInCelcius);
+    Weather freezingWeather = Weather.fromCelcius(freezingTemperatureInCelcius);
     when(weatherAPI.findWeatherByCityName(FREEZING_CITY_NAME)).thenReturn(freezingWeather);
     when(weatherAPI.findWeather(freezingGeographicCoordinate)).thenReturn(freezingWeather);
 
