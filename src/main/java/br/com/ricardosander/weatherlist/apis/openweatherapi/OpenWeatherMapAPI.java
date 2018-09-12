@@ -9,11 +9,15 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import net.aksingh.owmjapis.core.OWM;
 import net.aksingh.owmjapis.model.CurrentWeather;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class OpenWeatherMapAPI implements WeatherAPI {
+
+  private final Logger logger = LoggerFactory.getLogger(OpenWeatherMapAPI.class);
 
   private final OWM openWeatherMapApi;
 
@@ -44,10 +48,13 @@ public class OpenWeatherMapAPI implements WeatherAPI {
 
       return cityWeatherCache.get(cityName, () -> {
 
+        logger.info("Calling OpenWeatherMap API by city name " + cityName);
+
         CurrentWeather currentWeather = openWeatherMapApi.currentWeatherByCityName(cityName);
 
         if (currentWeather.getMainData() == null
             || currentWeather.getMainData().getTemp() == null) {
+          logger.info("City name " + cityName + " not found by OpenWeatherMap API.");
           throw new ObjectNotFoundException("City with city name " + cityName + " not found.");
         }
 
@@ -60,13 +67,16 @@ public class OpenWeatherMapAPI implements WeatherAPI {
               GeographicCoordinate.newInstance(currentWeather.getCoordData().getLatitude(),
                   currentWeather.getCoordData().getLongitude());
 
+          logger.info("Caching weather for city " + cityName + " and " + geoCoordinate.toString());
           return geoCoordinateWeatherCache.get(geoCoordinate, () -> weather);
         }
 
+        logger.info("Caching Weather for city " + cityName);
         return weather;
       });
 
     } catch (ExecutionException e) {
+      logger.error(e.getMessage());
       throw new OpenWeatherMapApiUnavailableException(e.getMessage());
     }
 
@@ -80,12 +90,15 @@ public class OpenWeatherMapAPI implements WeatherAPI {
 
       return geoCoordinateWeatherCache.get(geographicCoordinate, () -> {
 
+        logger.info("Calling OpenWeatherMap API by " + geographicCoordinate.toString());
+
         final CurrentWeather currentWeather =
             openWeatherMapApi.currentWeatherByCoords(geographicCoordinate.getLatitude(),
                 geographicCoordinate.getLongitude());
 
         if (currentWeather.getMainData() == null
             || currentWeather.getMainData().getTemp() == null) {
+          logger.info(geographicCoordinate.toString() + " not found by OpenWeatherMap API.");
           throw new ObjectNotFoundException(geographicCoordinate.toString() + " not found.");
         }
 
@@ -94,13 +107,17 @@ public class OpenWeatherMapAPI implements WeatherAPI {
         final Weather weather = new Weather(currentWeather.getMainData().getTemp() - 273);
 
         if (cityName != null && !cityName.isEmpty()) {
+          logger.info(
+              "Caching weather for city " + cityName + " and " + geographicCoordinate.toString());
           return cityWeatherCache.get(cityName, () -> weather);
         }
 
+        logger.info("Caching weather for " + geographicCoordinate.toString());
         return weather;
       });
 
     } catch (ExecutionException e) {
+      logger.error(e.getMessage());
       throw new OpenWeatherMapApiUnavailableException(e.getMessage());
     }
 

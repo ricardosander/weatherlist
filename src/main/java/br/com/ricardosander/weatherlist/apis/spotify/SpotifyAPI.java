@@ -15,6 +15,8 @@ import com.wrapper.spotify.model_objects.specification.Paging;
 import com.wrapper.spotify.model_objects.specification.PlaylistSimplified;
 import com.wrapper.spotify.model_objects.specification.PlaylistTrack;
 import com.wrapper.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,6 +25,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class SpotifyAPI implements PlaylistAPI {
+
+  private final Logger logger = LoggerFactory.getLogger(SpotifyAPI.class);
 
   private static final int LIMIT_PLAYLIST_TO_SEARCH = 1;
 
@@ -63,15 +67,18 @@ public class SpotifyAPI implements PlaylistAPI {
 
       return playlistCache.get(category, () -> {
 
+            logger.info("Calling Spotify API : Playlist by category " + category);
             if (!isAuthenticated()) {
               authenticate();
             }
 
+            logger.info("Caching Playlist for category " + category);
             return getPlaylist(category);
           }
       );
 
     } catch (ExecutionException e) {
+      logger.error(e.getMessage());
       spotifyApi.setAccessToken(null);
       throw new SpotifyApiUnavailableException(e.getMessage());
     }
@@ -84,11 +91,16 @@ public class SpotifyAPI implements PlaylistAPI {
     ClientCredentials clientCredentials = null;
 
     try {
+
+      logger.info("Authenticating on Spotify API.");
       clientCredentials = clientCredentialsRequest.execute();
+
     } catch (IOException | SpotifyWebApiException e) {
+      logger.error(e.getMessage());
       throw new SpotifyApiUnavailableException(e.getMessage());
     }
 
+    logger.info("Registering Spotify access token.");
     spotifyApi.setAccessToken(clientCredentials.getAccessToken());
   }
 
@@ -106,6 +118,7 @@ public class SpotifyAPI implements PlaylistAPI {
     List<Track> myTracks = convertTracks(tracks);
 
     if (myTracks.isEmpty()) {
+      logger.info("Playlist for category " + category + " not found.");
       throw new ObjectNotFoundException("Playlist for " + category + " not found.");
     }
 
@@ -117,6 +130,8 @@ public class SpotifyAPI implements PlaylistAPI {
     return
         playlistInfoCache.get(category, () -> {
 
+          logger.info("Calling Spotify API by category " + category);
+
           Paging<PlaylistSimplified> playlistResult =
               spotifyApi.getCategorysPlaylists(category.getLowerCase())
                   .limit(LIMIT_PLAYLIST_TO_SEARCH)
@@ -124,9 +139,11 @@ public class SpotifyAPI implements PlaylistAPI {
                   .execute();
 
           if (playlistResult.getItems().length == 0) {
+            logger.info("Playlist for category " + category + " not found.");
             throw new ObjectNotFoundException("Playlist for " + category + " not found.");
           }
 
+          logger.info("Caching Playlist information for category " + category);
           return new SpotifyPlaylistDTO(playlistResult.getItems()[0].getId(),
               playlistResult.getItems()[0].getOwner().getId());
         });

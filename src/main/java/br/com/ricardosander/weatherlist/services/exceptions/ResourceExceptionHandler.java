@@ -1,5 +1,7 @@
 package br.com.ricardosander.weatherlist.services.exceptions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -9,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
 public class ResourceExceptionHandler {
+
+  private final Logger logger = LoggerFactory.getLogger(ResourceExceptionHandler.class);
 
   static final String INVALID_PARAMETER_ERROR = "Invalid Parameter";
   static final String NOT_FOUND_ERROR = "Not found";
@@ -31,6 +35,7 @@ public class ResourceExceptionHandler {
       InvalidParameterException exception,
       HttpServletRequest request) {
 
+    logger.info(exception.getMessage());
 
     HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
     StandardError standardError =
