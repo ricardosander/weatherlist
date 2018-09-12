@@ -119,7 +119,7 @@ public class GeographicCoordinateValidatorTest {
   @Test(expected = InvalidParameterException.class)
   public void testWithInvalidPositiveLatitudeAlmostValid() {
 
-    double latitude = 90.0001;
+    double latitude = 90.009;
     double longitude = 45.0;
 
     GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
@@ -132,7 +132,7 @@ public class GeographicCoordinateValidatorTest {
   public void testWithInvalidPositiveLongitudeAlmostValid() {
 
     double latitude = 45.0;
-    double longitude = 180.0001;
+    double longitude = 180.009;
 
     GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
 
@@ -167,7 +167,7 @@ public class GeographicCoordinateValidatorTest {
   @Test(expected = InvalidParameterException.class)
   public void testWithInvalidNegativeLatitudeAlmostValid() {
 
-    double latitude = -90.0001;
+    double latitude = -90.009;
     double longitude = 45.0;
 
     GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
@@ -180,7 +180,7 @@ public class GeographicCoordinateValidatorTest {
   public void testWithInvalidNegativeLongitudeAlmostValid() {
 
     double latitude = 45;
-    double longitude = -180.0001;
+    double longitude = -180.009;
 
     GeographicCoordinate geoCoordinate = GeographicCoordinate.newInstance(latitude, longitude);
 
