@@ -12,10 +12,10 @@ This application service give you a playlist based on your location.
 
 ## Running
 
-You can run the application by running the following command line.
+You can run the application by running the following command line (passing the API keys necessary, see [configuration section](#configuration)).
 
 ```
-docker run -d -p 8080:8080 ricardosander/weatherlist
+docker run -d -p 8080:8080 -e OPEN_WEATHER_MAP_KEY=YOUR_OPEN_WEATHER_MAP_KEY -e SPOTIFY_CLIENT_ID=YOUR_SPOTIFY_CLIENT_ID -e SPOTIFY_SECRET=YOUR_SPOTIFY_SECRET ricardosander/weatherlist
 ```
 
 ## Deploying
