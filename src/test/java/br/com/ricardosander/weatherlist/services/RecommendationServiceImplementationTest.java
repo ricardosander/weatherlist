@@ -12,6 +12,7 @@ import br.com.ricardosander.weatherlist.apis.WeatherAPI;
 import br.com.ricardosander.weatherlist.apis.exceptions.ApiUnavailableException;
 import br.com.ricardosander.weatherlist.dto.GeographicCoordinate;
 import br.com.ricardosander.weatherlist.entities.Category;
+import br.com.ricardosander.weatherlist.entities.DefaultPlaylist;
 import br.com.ricardosander.weatherlist.entities.Playlist;
 import br.com.ricardosander.weatherlist.entities.Track;
 import br.com.ricardosander.weatherlist.entities.Weather;
@@ -20,6 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -106,7 +108,8 @@ public class RecommendationServiceImplementationTest {
     when(playlistAPI.find(Category.ROCK)).thenReturn(createPlaylist(ROCK_SONG_NAMES));
     when(playlistAPI.find(Category.CLASSICAL)).thenReturn(createPlaylist(CLASSIC_SONG_NAMES));
 
-    recommendationService = new RecommendationServiceImplementation(weatherAPI, playlistAPI);
+    recommendationService = new RecommendationServiceImplementation(weatherAPI, playlistAPI,
+        new DefaultPlaylist(Collections.emptyList()));
   }
 
   @Test

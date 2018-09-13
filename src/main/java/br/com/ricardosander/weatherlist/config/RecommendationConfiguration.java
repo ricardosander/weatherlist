@@ -8,6 +8,8 @@ import br.com.ricardosander.weatherlist.apis.WeatherApiConfiguration;
 import br.com.ricardosander.weatherlist.apis.openweatherapi.OpenWeatherMapConfiguration;
 import br.com.ricardosander.weatherlist.apis.spotify.SpotifyAPI;
 import br.com.ricardosander.weatherlist.apis.spotify.SpotifyConfiguration;
+import br.com.ricardosander.weatherlist.entities.DefaultPlaylist;
+import br.com.ricardosander.weatherlist.entities.Track;
 import br.com.ricardosander.weatherlist.services.RecommendationService;
 import br.com.ricardosander.weatherlist.services.RecommendationServiceImplementation;
 import org.slf4j.Logger;
@@ -18,6 +20,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 @Configuration
 @PropertySource("classpath:application.properties")
 public class RecommendationConfiguration {
@@ -27,9 +32,9 @@ public class RecommendationConfiguration {
   @Bean
   @Autowired
   public RecommendationService recommendationService(WeatherAPI weatherAPI,
-      PlaylistAPI playlistAPI) {
+      PlaylistAPI playlistAPI, DefaultPlaylist defaultPlaylist) {
     logger.info("Creating RecommendationService");
-    return new RecommendationServiceImplementation(weatherAPI, playlistAPI);
+    return new RecommendationServiceImplementation(weatherAPI, playlistAPI, defaultPlaylist);
   }
 
   @Bean
@@ -71,6 +76,16 @@ public class RecommendationConfiguration {
     logger.info("Creating OpenWeatherMapConfiguration");
     return new OpenWeatherMapConfiguration(key, cityCacheTimeInMinutes,
         geoCoordinatesCacheTimeInMinutes, cityCacheSize, geoCoordinatesCacheSize);
+  }
+
+  @Bean
+  public DefaultPlaylist defaultPlaylist(@Value("${defaultTracks}") String defaultTracks) {
+
+    logger.info("Creating default playlist.");
+
+    return new DefaultPlaylist(
+        Arrays.asList(defaultTracks.split(",")).stream().map(Track::new).collect(
+            Collectors.toList()));
   }
 
 }
