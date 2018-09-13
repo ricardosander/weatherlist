@@ -8,7 +8,7 @@ This application service give you a playlist based on your location.
 ## Dependecy
 * Docker 18.06
 * Maven 3.3.9 (for building)
-* Java JDK 1.8 (for building)
+* JDK 1.8 (for building)
 
 ## Running
 
