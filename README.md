@@ -2,6 +2,9 @@
 
 This application service give you a playlist based on your location.
 
+## API documentation
+[API documentation on swagger](https://app.swaggerhub.com/apis/ricardosander/weatherlist/1.0.0)
+
 ## Dependecy
 * Docker 18.06
 * Maven 3.3.9 (for building)
@@ -29,12 +32,6 @@ and then create a container by running
 ```
 docker run -d -p 8080:8080 weatherlist
 ```
-
-## API documentation
-[API documentation on swagger](https://app.swaggerhub.com/apis/ricardosander/weatherlist/1.0.0)
-
-You can make usage of OpenWeatherMaps API (https://openweathermap.org) to fetch temperature data and
-Spotify (https://developer.spotify.com) to suggest the tracks as part of the playlist.
 
 ## Configuration
 
