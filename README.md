@@ -11,6 +11,7 @@ You can run the application by running the following command line.
 docker run -d -p 8080:8080 ricardosander/weatherlist
 ```
 
+# Deploying
 If you want to build it on your own machine you can run the following command
 
 ```
@@ -21,6 +22,9 @@ and then create a container by running
 ```
 docker run -d -p 8080:8080 weatherlist
 ```
+
+# API documentation
+[API documentation on swagger](https://app.swaggerhub.com/apis/ricardosander/weatherlist/1.0.0)
 
 # iFood Backend Advanced Test
 
