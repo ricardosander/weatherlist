@@ -1,3 +1,27 @@
+# Dependecy
+* Docker 18.06
+* Maven 3.3.9 (for building)
+* Java JDK 1.8 (for building)
+
+# Running
+
+You can run the application by running the following command line.
+
+```
+docker run -d -p 8080:8080 ricardosander/weatherlist
+```
+
+If you want to build it on your own machine you can run the following command
+
+```
+docker build -t weatherlist .
+```
+and then create a container by running
+
+```
+docker run -d -p 8080:8080 weatherlist
+```
+
 # iFood Backend Advanced Test
 
 Create a micro-service able to accept RESTful requests receiving as parameter either city name or lat long coordinates and returns a playlist (only track names is fine) suggestion according to the current temperature.
