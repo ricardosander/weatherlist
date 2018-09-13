@@ -15,16 +15,32 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * It is a wrapper for aksinghnet/owm-japis library.
+ * Responsible for calling the OpenWeatherMap API and caching the returning values.
+ */
 public class OpenWeatherMapAPI implements WeatherAPI {
 
   private final Logger logger = LoggerFactory.getLogger(OpenWeatherMapAPI.class);
 
+  /**
+   * aksinghnet/owm-japis library main point.
+   */
   private final OWM openWeatherMapApi;
 
+  /**
+   * Weather cache by city name.
+   */
   private final Cache<String, Weather> cityWeatherCache;
 
+  /**
+   * Weather cache by geo coordinates.
+   */
   private final Cache<GeographicCoordinate, Weather> geoCoordinateWeatherCache;
 
+  /**
+   * @param weatherApiConfiguration Configuration needed for caching and connecting to API.
+   */
   public OpenWeatherMapAPI(OpenWeatherMapConfiguration weatherApiConfiguration) {
 
     openWeatherMapApi = new OWM(weatherApiConfiguration.getKey());
@@ -123,17 +139,32 @@ public class OpenWeatherMapAPI implements WeatherAPI {
 
   }
 
+  /**
+   * Translates CurrentWeather from library to geographic coordinates.
+   * @param currentWeather weather information returned by the library.
+   * @return Geographic coordinates.
+   */
   private GeographicCoordinate translateToGeographicCootdinates(CurrentWeather currentWeather) {
     return GeographicCoordinate.newInstance(currentWeather.getCoordData().getLatitude(),
         currentWeather.getCoordData().getLongitude());
   }
 
+  /**
+   * Checks if there are geographic information for the weather information.
+   * @param currentWeather weather information from the library.
+   * @return
+   */
   private boolean hasGeographicCoordinates(CurrentWeather currentWeather) {
     return currentWeather.getCoordData() != null
         && currentWeather.getCoordData().getLatitude() != null
         && currentWeather.getCoordData().getLongitude() != null;
   }
 
+  /**
+   * Checks if temperature data is missing
+   * @param currentWeather weather information from the library.
+   * @return
+   */
   private boolean hasNoTempData(CurrentWeather currentWeather) {
     return currentWeather.getMainData() == null
         || currentWeather.getMainData().getTemp() == null;

@@ -11,6 +11,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
+/**
+ * Represents geographic coordinates.
+ */
 public class GeographicCoordinate {
 
   private final static GeographicCoordinateValidator validator =
@@ -25,17 +28,36 @@ public class GeographicCoordinate {
   private static final String INVALID_GEOGRAPHIC_COORDINATES =
       INVALID_LATITUDE_MESSAGE + " and " + INVALID_LONGITUDE_MESSAGE;
 
+  /**
+   * Decimal scale to be used.
+   */
   private static final int ROUND_SCALE = 2;
 
+  /**
+   * Geographic latitude.
+   */
   private final double latitude;
 
+  /**
+   * Geographic longitude.
+   */
   private final double longitude;
 
+  /**
+   * @param latitude Geographic latitude.
+   * @param longitude Geographic longitude.
+   */
   private GeographicCoordinate(double latitude, double longitude) {
     this.latitude = latitude;
     this.longitude = longitude;
   }
 
+  /**
+   * Creates a GeographicCoordinate based on latitude and longitude. It fails for invalid data.
+   * @param latitude Geographic latitude.
+   * @param longitude Geographic longitude.
+   * @return
+   */
   public static GeographicCoordinate newInstance(double latitude, double longitude) {
 
     final double roundedLatitude =

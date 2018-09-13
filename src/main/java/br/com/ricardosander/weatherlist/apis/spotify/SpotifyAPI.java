@@ -24,22 +24,48 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * It is a wrapper for thelinmichael/spotify-web-api-java library.
+ * Responsible for calling the Spotify API and caching the returning values.
+ */
 public class SpotifyAPI implements PlaylistAPI {
 
   private final Logger logger = LoggerFactory.getLogger(SpotifyAPI.class);
 
+  /**
+   * Limit of playlist to search for each category.
+   */
   private static final int LIMIT_PLAYLIST_TO_SEARCH = 1;
 
+  /**
+   * Data searched from playlists.
+   */
   private static final String TRACK_FIELDS_TO_RETRIEVE = "items(track.name)";
 
+  /**
+   * thelinmichael/spotify-web-api-java library main point.
+   */
   private final SpotifyApi spotifyApi;
 
+  /**
+   * Playlist info cache by category.
+   */
   private final Cache<Category, SpotifyPlaylistDTO> playlistInfoCache;
 
+
+  /**
+   * Playlist cache by category.
+   */
   private final Cache<Category, Playlist> playlistCache;
 
+  /**
+   * Limit of tracks to each playlist.
+   */
   private final int limitPlaylistTracks;
 
+  /**
+   * @param configuration Configuration needed for caching and connecting to API.
+   */
   public SpotifyAPI(SpotifyConfiguration configuration) {
 
     spotifyApi = SpotifyApi.builder()
@@ -85,6 +111,10 @@ public class SpotifyAPI implements PlaylistAPI {
 
   }
 
+  /**
+   * Tries to authenticate to Spotify API.
+   * @throws SpotifyApiUnavailableException
+   */
   private void authenticate() throws SpotifyApiUnavailableException {
 
     ClientCredentialsRequest clientCredentialsRequest = spotifyApi.clientCredentials().build();
@@ -104,10 +134,22 @@ public class SpotifyAPI implements PlaylistAPI {
     spotifyApi.setAccessToken(clientCredentials.getAccessToken());
   }
 
+  /**
+   * Verifies if it is authenticate into the API.
+   * @return
+   */
   private boolean isAuthenticated() {
     return spotifyApi.getAccessToken() != null && !spotifyApi.getAccessToken().isEmpty();
   }
 
+  /**
+   * Get a Playlist from the API based on the category
+   * @param category category for API searching of playlist.
+   * @return
+   * @throws IOException
+   * @throws SpotifyWebApiException
+   * @throws ExecutionException
+   */
   private Playlist getPlaylist(Category category)
       throws IOException, SpotifyWebApiException, ExecutionException {
 
@@ -125,6 +167,12 @@ public class SpotifyAPI implements PlaylistAPI {
     return new Playlist(myTracks);
   }
 
+  /**
+   * Retrieves Playlist info from the API.
+   * @param category category for API search.
+   * @return
+   * @throws ExecutionException
+   */
   private SpotifyPlaylistDTO getPlaylistInfo(Category category) throws ExecutionException {
 
     return
@@ -150,6 +198,13 @@ public class SpotifyAPI implements PlaylistAPI {
 
   }
 
+  /**
+   * Retrieves the tracks information for a playlost from the API.
+   * @param spotifyPlaylist playlist information from the API.
+   * @return
+   * @throws IOException
+   * @throws SpotifyWebApiException
+   */
   private PlaylistTrack[] getPlaylistTracks(SpotifyPlaylistDTO spotifyPlaylist)
       throws IOException, SpotifyWebApiException {
 
@@ -163,6 +218,11 @@ public class SpotifyAPI implements PlaylistAPI {
     return playlistTrackPaging.getItems();
   }
 
+  /**
+   * Convert tracks from API into a list of applications tracks.
+   * @param spotifyTracks API returned tracks.
+   * @return
+   */
   private List<Track> convertTracks(PlaylistTrack[] spotifyTracks) {
 
     List<Track> applicationTracks = new ArrayList<>();
@@ -173,6 +233,11 @@ public class SpotifyAPI implements PlaylistAPI {
     return applicationTracks;
   }
 
+  /**
+   * Convert a track from API into an applications track.
+   * @param spotifyTrack API returned track.
+   * @return
+   */
   private Track convertTrack(PlaylistTrack spotifyTrack) {
     return new Track(spotifyTrack.getTrack().getName());
   }

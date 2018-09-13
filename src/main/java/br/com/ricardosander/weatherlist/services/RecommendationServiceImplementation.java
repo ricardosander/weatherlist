@@ -18,10 +18,19 @@ public class RecommendationServiceImplementation implements RecommendationServic
 
   private final Logger logger = LoggerFactory.getLogger(RecommendationServiceImplementation.class);
 
+  /**
+   * API for weather search.
+   */
   private final WeatherAPI weatherAPI;
 
+  /**
+   * API for playlist search.
+   */
   private final PlaylistAPI playlistAPI;
 
+  /**
+   * Default playlist to be returned on failures or playlist not being found.
+   */
   private final DefaultPlaylist defaultPlaylist;
 
   @Autowired
